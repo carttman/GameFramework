@@ -41,6 +41,7 @@ private:
 
     void UpdatePlayerInfo();
 
+    void UpdateEnemyInfo();
     GameObject* GetPlayer() const
     {
 	    return (GameObject*)m_GameObjectPtrTable[0];
@@ -80,6 +81,6 @@ private:
 #pragma region resource
     using BitmapInfo = renderHelp::BitmapInfo;
     BitmapInfo* m_pPlayerBitmapInfo = nullptr;
-    //* m_pEnemyBitmapInfo = nullptr;
+    BitmapInfo* m_pEnemyBitmapInfo = nullptr;
 #pragma endregion
 };

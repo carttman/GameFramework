@@ -48,11 +48,16 @@ bool MyFirstWndGame::Initialize()
 	// IDE에서 인지하는 현재 경로와 실제 실행 파일을 바로 실행했을 때 경로 기준이 다름
 	// ./ 는 상대 경로
 	m_pPlayerBitmapInfo = renderHelp::CreateBitmapInfo(L"../Resource/redbird.png");
-	//m_pEnemyBitmapInfo = renderHelp::CreateBitmapInfo(L"./Resource/graybird.png");
+	m_pEnemyBitmapInfo = renderHelp::CreateBitmapInfo(L"../Resource/graybird.png");
 	if (m_pPlayerBitmapInfo == nullptr)
 	{
 		std::cout << "Bitmap Load Failed!" << std::endl;
 		return false;
+	}
+	if (m_pEnemyBitmapInfo == nullptr)
+	{
+		std::cout << "Bitmap Load Failed!" << std::endl;
+		 return false;
 	}
 	#pragma endregion
 	
@@ -168,8 +173,10 @@ void MyFirstWndGame::CollisionCheck()
 void MyFirstWndGame::LogicUpdate()
 {
 	UpdatePlayerInfo();
-
+	UpdateEnemyInfo();
 	CollisionCheck();
+	
+	
 }
 
 void MyFirstWndGame::CreatePlayer()
@@ -201,9 +208,13 @@ void MyFirstWndGame::CreateEnemy() // ��Ŭ�� -> ���� ��ġ �
 	GameObject* pNewObject = new GameObject(ObjectType::ENEMY);
 	pNewObject->SetName("Enemy");
 	pNewObject->SetPosition(x, y);
-	pNewObject->SetSpeed(1.0f); // �ϴ�, ���Ƿ� ����   
+	pNewObject->SetSpeed(0.5f); // �ϴ�, ���Ƿ� ����   
 	pNewObject->SetColliderCircle(radius); // �ϴ�, ���Ƿ� ����. ������Ʈ ������ �� �� �ϰ� ���� ����.
-
+	
+	pNewObject->SetWidth(100);
+	pNewObject->SetHeight(100);
+	pNewObject->SetBitmapInfo(m_pEnemyBitmapInfo);
+	
 	bool flag = false;
 	for (int i = 0; i < MAX_GAME_OBJECT_COUNT; i++)
 	{
@@ -261,10 +272,91 @@ void MyFirstWndGame::UpdatePlayerInfo()
 	{
 		playerDir.Normalize(); // ����ȭ
 		pPlayer->SetDirection(playerDir); // �÷��̾� ���� ����
+		pPlayer->SetSpeed(1.0f);
 	}
 	else
 	{
 		pPlayer->SetDirection(Vector2f(0, 0)); // �÷��̾� ����
+		pPlayer->SetSpeed(0);
+	}
+}
+
+void MyFirstWndGame::UpdateEnemyInfo()
+{
+	const auto player = GetPlayer();
+	ColliderCircle* playerCircle = player->GetColiderCircle();
+	if (player == nullptr)
+		return;
+	
+	// 플레이어가 움직였다면 enemy 전부 따라가게 한다.
+	// enemy는 플레이어 원을 넘지 않도록 한다.
+	for (int i = 1; i < MAX_GAME_OBJECT_COUNT; ++i)
+	{
+		if (m_GameObjectPtrTable[i] == nullptr)
+			continue;
+		
+		// Player와 Enemy의 충돌 원의 범위를 계산하여 겹치지 않도록 한다
+		GameObject* enemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
+		ColliderCircle* enemyCircle = enemy->GetColiderCircle();
+		
+		Vector2f playerPos = playerCircle->center;
+		Vector2f enemyPos = enemyCircle->center;
+
+		float dist = playerPos.Distance(enemyPos) - static_cast<float>(playerCircle->radius) - static_cast<float>(enemyCircle->radius);
+
+		Vector2f dir = playerPos - enemyPos;
+		dir.Normalize();
+		
+		if (dist <= 0)
+		{
+			enemy->SetDirection(-dir);
+			enemy->SetSpeed(1.5f);
+		}
+		else
+		{
+			enemy->SetDirection(dir);
+			enemy->SetSpeed(0.5f);
+		}
+		
+		if (player->GetSpeed() <= 0)
+		{
+			enemy->SetDirection(0);
+			enemy->SetSpeed(0);
+		}
+	}
+	
+	//enemy들끼리 겹치지않도록 한다.
+	for (int i = 1; i < MAX_GAME_OBJECT_COUNT; ++i)
+	{
+		if (m_GameObjectPtrTable[i] == nullptr)
+			continue;
+		
+		// Enemy들의 충돌 원의 범위를 계산하여 겹치지 않도록 한다
+		GameObject* enemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
+		ColliderCircle* enemyCircle = enemy->GetColiderCircle();
+
+		for (int j = i; j < MAX_GAME_OBJECT_COUNT; ++j)
+		{
+			if (m_GameObjectPtrTable[j] == nullptr || enemy == m_GameObjectPtrTable[j])
+				continue;
+			
+			GameObject* otherEnemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[j]);
+			ColliderCircle* otherEnemyCircle = otherEnemy->GetColiderCircle();
+			
+			Vector2f enemyPos = enemyCircle->center;
+			Vector2f otherEnemyPos = otherEnemyCircle->center;
+	
+			float dist = otherEnemyPos.Distance(enemyPos) - static_cast<float>(otherEnemyCircle->radius) - static_cast<float>(enemyCircle->radius);
+	
+			Vector2f dir = otherEnemyPos - enemyPos;
+			dir.Normalize();
+			
+			if (dist <= 0)
+			{
+				enemy->SetDirection(-dir);
+				enemy->SetSpeed(1.5f);
+			}
+		}
 	}
 }
 
