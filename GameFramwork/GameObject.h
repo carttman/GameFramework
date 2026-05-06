@@ -106,14 +106,15 @@ public:
     using BitmapInfo = renderHelp::BitmapInfo;
 public:
     void SetBitmapInfo(BitmapInfo* bitmapInfo);
+    void SetWidth(int width) { m_width = width; }
+    void SetHeight(int height) { m_height = height; }
 protected:
     
     void DrawBitmap(HDC hdc); 
     void UpdateFrame(float deltaTime);
 
-    int m_width = 60;
-    int m_height = 60;
-    
+    int m_width;
+    int m_height;
     // Bitmap 정보
     BitmapInfo* m_pBitmapInfo = nullptr;
 

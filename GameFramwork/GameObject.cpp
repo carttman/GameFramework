@@ -23,6 +23,7 @@ GameObject::~GameObject()
 
 void GameObject::Update(float deltaTime)
 {
+    UpdateFrame(deltaTime);
     Move(deltaTime);
 
     // Collider ������Ʈ
@@ -127,11 +128,30 @@ void GameObject::SetBitmapInfo(BitmapInfo* bitmapInfo)
     assert(m_pBitmapInfo == nullptr && "BitmapInfo must be null!");
 
     m_pBitmapInfo = bitmapInfo;
+    
+    // 스프라이트 정보는 일단은 하드코딩해요. 
+    // 일단, 프레임 크기와 시간이 같다고 가정합니다.
+    m_frameWidth = m_pBitmapInfo->GetWidth() / 5;
+    m_frameHeight = m_pBitmapInfo->GetHeight() / 3;
+    m_frameIndex = 0;
 
-    m_width = 60;
-    m_height = 60;
-    m_frameWidth = 169;
-    m_frameHeight = 184;
+    for (int i = 0; i < 5; ++i)
+    {
+        m_frameXY[i].x = i * m_frameWidth;
+        m_frameXY[i].y = 0;
+    }
+
+    for (int i = 0; i < 5; ++i)
+    {
+        m_frameXY[i + 5].x = i * m_frameWidth;
+        m_frameXY[i + 5].y = m_frameHeight;
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        m_frameXY[i + 10].x = i * m_frameWidth;
+        m_frameXY[i + 10].y = m_frameHeight * 2;
+    }
 }
 
 void GameObject::DrawBitmap(HDC hdc)

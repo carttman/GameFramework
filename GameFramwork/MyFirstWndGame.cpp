@@ -183,10 +183,11 @@ void MyFirstWndGame::CreatePlayer()
 	pNewObject->SetSpeed(1.0f); // �ϴ�, ���Ƿ� ����   
 
 	//====================bitmap
+	pNewObject->SetWidth(100); // 일단, 임의로 설정
+	pNewObject->SetHeight(100); // 일단, 임의로 설정
 	pNewObject->SetBitmapInfo(m_pPlayerBitmapInfo);
 	//====================
 	pNewObject->SetColliderCircle(50.0f); // �ϴ�, ���Ƿ� ����. ������Ʈ ������ �� �� �ϰ� ���� ����.
-
 	m_GameObjectPtrTable[0] = pNewObject;
 }
 
