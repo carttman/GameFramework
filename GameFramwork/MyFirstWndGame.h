@@ -33,15 +33,15 @@ private:
     void OnRButtonDown(int x, int y);
 
     void FixedUpdate();
-    void CollisionCheck();
+    //void CollisionCheck();
     void LogicUpdate();
 
     void CreatePlayer();
-    void CreateEnemy();
+    //void CreateEnemy();
 
     void UpdatePlayerInfo();
 
-    void UpdateEnemyInfo();
+    //void UpdateEnemyInfo();
     GameObject* GetPlayer() const
     {
 	    return (GameObject*)m_GameObjectPtrTable[0];

@@ -98,8 +98,8 @@ protected:
     ColliderBox* m_pColliderBox = nullptr;
 
 public:
-    ColliderCircle* GetColiderCircle(){return m_pColliderCircle;}
-    bool isColide = false;
+    //ColliderCircle* GetColiderCircle(){return m_pColliderCircle;}
+    //bool isColide = false;
     
     
 // ========================================================================= bitmap
@@ -118,13 +118,11 @@ protected:
     // Bitmap 정보
     BitmapInfo* m_pBitmapInfo = nullptr;
 
-    // 점진적으로 예쁘게 고쳐 보아요.
     struct FrameFPos
     {
         int x;
         int y;
     };
-    // 프레임 정보: 왜 14개냐고 물으시면 셌다고 밖에...:)
     FrameFPos m_frameXY[14] = {{ 0, 0 }, };
     int m_frameWidth = 169;
     int m_frameHeight = 184;

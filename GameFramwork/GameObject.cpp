@@ -82,15 +82,15 @@ void GameObject::SetColliderBox(float width, float height)
 // ���� ���⿡ ���� ���� ����ϰ� ���� ������.
 void GameObject::DrawCollider(HDC hdc)
 {
-    HPEN hPen;
-    if (isColide)
-    {
-		hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255)); 
-    }
-    else
-    {
-    	hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0)); 
-    }
+    HPEN hPen = CreatePen(PS_SOLID, 2, RGB(255, 255, 255));
+  //   if (isColide)
+  //   {
+		// hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255)); 
+  //   }
+  //   else
+  //   {
+  //   	hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0)); 
+  //   }
 
     HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, GetStockObject(NULL_BRUSH));
