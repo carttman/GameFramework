@@ -130,6 +130,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MyFirstWndGame.cpp" />
     <ClCompile Include="NzWndBase.cpp" />
+    <ClCompile Include="OmokGame.cpp" />
     <ClCompile Include="RenderHelp.cpp" />
     <ClCompile Include="Utillity.cpp" />
   </ItemGroup>
@@ -140,6 +141,7 @@
     <ClInclude Include="INC_Windows.h" />
     <ClInclude Include="MyFirstWndGame.h" />
     <ClInclude Include="NzWndBase.h" />
+    <ClInclude Include="OmokGame.h" />
     <ClInclude Include="RenderHelp.h" />
     <ClInclude Include="Utillity.h" />
   </ItemGroup>

@@ -1,10 +1,13 @@
 ﻿#include "MyFirstWndGame.h"
 #include <iostream>
 
+#include "OmokGame.h"
+
 
 int main()
 {
-	MyFirstWndGame game;
+	//MyFirstWndGame game;
+	OmokGame game;
 	if (false == game.Initialize())
 	{
 		std::cout << "Failed to initialize the game. Error: " << GetLastError() << std::endl;
