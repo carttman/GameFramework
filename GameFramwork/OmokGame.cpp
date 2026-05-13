@@ -31,6 +31,9 @@ bool OmokGame::Initialize()
 
 	m_hDefaultBitmap = (HBITMAP)SelectObject(m_hBackDC, m_hBackBitmap);
 
+	m_BoardOffsetX = (m_width - BOARD_PIXEL_SIZE) / 2;
+	m_BoardOffsetY = (m_height - BOARD_PIXEL_SIZE) / 2;
+
 	return true;
 }
 
@@ -96,9 +99,69 @@ void OmokGame::Render()
 	//Clear the back buffer
 	::PatBlt(m_hBackDC, 0, 0, m_width, m_height, WHITENESS);
 
+	DrawBoard(m_hBackDC);
+
 	//�޸� DC�� �׷��� ����� ���� DC(m_hFrontDC)�� ����
 	BitBlt(m_hFrontDC, 0, 0, m_width, m_height, m_hBackDC, 0, 0, SRCCOPY);
 
+}
+
+void OmokGame::DrawBoard(HDC hdc)
+{
+	const int boardLeft = m_BoardOffsetX;
+	const int boardTop = m_BoardOffsetY;
+	const int boardRight = boardLeft + BOARD_PIXEL_SIZE;
+	const int boardBottom = boardTop + BOARD_PIXEL_SIZE;
+
+	// 판 배경(나무색)
+	HBRUSH hBoardBrush = CreateSolidBrush(RGB(220, 179, 92));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBoardBrush);
+	HPEN hNoPen = (HPEN)GetStockObject(NULL_PEN);
+	HPEN hOldPen = (HPEN)SelectObject(hdc, hNoPen);
+	Rectangle(hdc, boardLeft, boardTop, boardRight + 1, boardBottom + 1);
+	SelectObject(hdc, hOldPen);
+
+	// 격자선
+	HPEN hLinePen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+	SelectObject(hdc, hLinePen);
+
+	const int gridLeft = boardLeft + BOARD_PADDING;
+	const int gridTop = boardTop + BOARD_PADDING;
+	const int gridRight = gridLeft + BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1);
+	const int gridBottom = gridTop + BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1);
+
+	for (int i = 0; i < BOARD_LINE_COUNT; ++i)
+	{
+		const int y = gridTop + i * BOARD_CELL_SIZE;
+		MoveToEx(hdc, gridLeft, y, nullptr);
+		LineTo(hdc, gridRight, y);
+
+		const int x = gridLeft + i * BOARD_CELL_SIZE;
+		MoveToEx(hdc, x, gridTop, nullptr);
+		LineTo(hdc, x, gridBottom);
+	}
+	// LineTo는 끝점 미포함이라 마지막 한 픽셀 보정
+	MoveToEx(hdc, gridRight, gridTop, nullptr);
+	LineTo(hdc, gridRight, gridBottom + 1);
+	MoveToEx(hdc, gridLeft, gridBottom, nullptr);
+	LineTo(hdc, gridRight + 1, gridBottom);
+
+	// 화점(별점) - 15x15 표준 5개 위치: (3,3), (3,11), (7,7), (11,3), (11,11)
+	HBRUSH hDotBrush = CreateSolidBrush(RGB(0, 0, 0));
+	SelectObject(hdc, hDotBrush);
+	const int dotIndices[5][2] = { {3,3}, {3,11}, {7,7}, {11,3}, {11,11} };
+	const int dotRadius = 4;
+	for (int i = 0; i < 5; ++i)
+	{
+		const int cx = gridLeft + dotIndices[i][0] * BOARD_CELL_SIZE;
+		const int cy = gridTop + dotIndices[i][1] * BOARD_CELL_SIZE;
+		Ellipse(hdc, cx - dotRadius, cy - dotRadius, cx + dotRadius + 1, cy + dotRadius + 1);
+	}
+
+	SelectObject(hdc, hOldBrush);
+	DeleteObject(hBoardBrush);
+	DeleteObject(hLinePen);
+	DeleteObject(hDotBrush);
 }
 
 void OmokGame::OnResize(int width, int height)
@@ -114,6 +177,9 @@ void OmokGame::OnResize(int width, int height)
 	HANDLE hPrevBitmap = (HBITMAP)SelectObject(m_hBackDC, m_hBackBitmap);
 
 	DeleteObject(hPrevBitmap);
+
+	m_BoardOffsetX = (m_width - BOARD_PIXEL_SIZE) / 2;
+	m_BoardOffsetY = (m_height - BOARD_PIXEL_SIZE) / 2;
 }
 
 void OmokGame::OnClose()

@@ -17,6 +17,8 @@ private:
     void Update();
     void Render();
 
+    void DrawBoard(HDC hdc);
+
     void OnResize(int width, int height) override;
     void OnClose() override;
 
@@ -50,5 +52,13 @@ private:
 
     MOUSE_POS m_MousePos = { 0, 0 };
     MOUSE_POS m_MousePosPrev = { 0, 0 };
+
+    static constexpr int BOARD_LINE_COUNT = 15;        // 15x15 (표준 오목 판)
+    static constexpr int BOARD_CELL_SIZE = 40;         // 한 칸의 픽셀 크기
+    static constexpr int BOARD_PADDING = 30;           // 격자 바깥 여백
+    static constexpr int BOARD_PIXEL_SIZE = BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1) + BOARD_PADDING * 2;
+
+    int m_BoardOffsetX = 0;
+    int m_BoardOffsetY = 0;
 };
 
