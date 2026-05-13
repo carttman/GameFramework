@@ -2,7 +2,6 @@
 #include "NzWndBase.h"
 #include "Utillity.h"
 
-// [CHECK] #7  ���� ������ ����Ͽ� ��������� �������� ����.
 class GameTimer;
 class GameObjectBase;
 class GameObject;
@@ -33,15 +32,15 @@ private:
     void OnRButtonDown(int x, int y);
 
     void FixedUpdate();
-    //void CollisionCheck();
+    void CollisionCheck();
     void LogicUpdate();
 
     void CreatePlayer();
-    //void CreateEnemy();
+    void CreateEnemy();
 
     void UpdatePlayerInfo();
 
-    //void UpdateEnemyInfo();
+    void UpdateEnemyInfo();
     GameObject* GetPlayer() const
     {
 	    return (GameObject*)m_GameObjectPtrTable[0];
@@ -53,12 +52,10 @@ private:
     HBITMAP m_hBackBitmap = nullptr;
     HBITMAP m_hDefaultBitmap = nullptr;
 
-    // [CHECK] #8. ���� Ÿ�̸Ӹ� ����Ͽ� �������� �����ϴ� ����.
     GameTimer* m_pGameTimer = nullptr;
     float m_fDeltaTime = 0.0f;
     float m_fFrameCount = 0.0f;
 
-    // [CHECK] #8. ���� ������Ʈ�� �����ϴ� �����̳�.
     GameObjectBase** m_GameObjectPtrTable = nullptr;
 
     struct MOUSE_POS

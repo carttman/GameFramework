@@ -1,5 +1,4 @@
-﻿// @brief  나전칠기 프로그래밍 기초 연습장
-#include "MyFirstWndGame.h"
+﻿#include "MyFirstWndGame.h"
 #include <iostream>
 
 

@@ -61,7 +61,6 @@ bool MyFirstWndGame::Initialize()
 	}
 	#pragma endregion
 	
-	// [CHECK]. ù ��° ���� ������Ʈ�� �÷��̾� ĳ���ͷ� ����!
 	CreatePlayer();
 	return true;
 
@@ -125,50 +124,50 @@ void MyFirstWndGame::FixedUpdate()
 {
 	if (m_EnemySpawnPos.x != 0 && m_EnemySpawnPos.y != 0)
 	{
-		//CreateEnemy();
+		CreateEnemy();
 	}
 }
 
-// void MyFirstWndGame::CollisionCheck()
-// {
-// 	GameObject* player = GetPlayer();
-// 	ColliderCircle* playerCircle = player->GetColiderCircle();
-//
-// 	bool isPlayerColide = false;
-// 	for (int i = 0; i < MAX_GAME_OBJECT_COUNT; ++i)
-// 	{
-// 		if (m_GameObjectPtrTable[i])
-// 		{
-// 			m_GameObjectPtrTable[i]->Update(m_fDeltaTime);
-//
-// 			if (i > 0)
-// 			{
-// 				GameObject* enemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
-// 				ColliderCircle* enemyCircle = enemy->GetColiderCircle();
-//
-// 				Vector2f enemyPos = enemyCircle->center;
-// 				Vector2f playerPos = playerCircle->center;
-//
-// 				float dis = playerPos.Distance(enemyPos) - static_cast<float>(playerCircle->radius) - static_cast<float>(enemyCircle->radius);
-//
-// 				if (dis < 0)
-// 				{
-// 					enemy->isColide = true;
-// 					isPlayerColide = true;
-// 				}
-// 				else
-// 				{
-// 					enemy->isColide = false;
-// 				}
-// 			}
-// 		}
-// 	}
-//
-// 	if (isPlayerColide)
-// 		player->isColide = true;
-// 	else
-// 		player->isColide = false;
-// }
+ void MyFirstWndGame::CollisionCheck()
+ {
+ 	GameObject* player = GetPlayer();
+ 	ColliderCircle* playerCircle = player->GetColiderCircle();
+
+ 	bool isPlayerColide = false;
+ 	for (int i = 0; i < MAX_GAME_OBJECT_COUNT; ++i)
+ 	{
+ 		if (m_GameObjectPtrTable[i])
+ 		{
+ 			m_GameObjectPtrTable[i]->Update(m_fDeltaTime);
+
+ 			if (i > 0)
+ 			{
+ 				GameObject* enemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
+ 				ColliderCircle* enemyCircle = enemy->GetColiderCircle();
+
+ 				Vector2f enemyPos = enemyCircle->center;
+ 				Vector2f playerPos = playerCircle->center;
+
+ 				float dis = playerPos.Distance(enemyPos) - static_cast<float>(playerCircle->radius) - static_cast<float>(enemyCircle->radius);
+
+ 				if (dis < 0)
+ 				{
+ 					enemy->isColide = true;
+ 					isPlayerColide = true;
+ 				}
+ 				else
+ 				{
+ 					enemy->isColide = false;
+ 				}
+ 			}
+ 		}
+ 	}
+
+ 	if (isPlayerColide)
+ 		player->isColide = true;
+ 	else
+ 		player->isColide = false;
+ }
 
 void MyFirstWndGame::LogicUpdate()
 {
@@ -181,8 +180,8 @@ void MyFirstWndGame::LogicUpdate()
 			m_GameObjectPtrTable[i]->Update(m_fDeltaTime);
 		}
 	}
-	//UpdateEnemyInfo();
-	//CollisionCheck();
+	UpdateEnemyInfo();
+	CollisionCheck();
 }
 
 void MyFirstWndGame::CreatePlayer()
@@ -192,75 +191,75 @@ void MyFirstWndGame::CreatePlayer()
 	GameObject* pNewObject = new GameObject(ObjectType::PLAYER);
 
 	pNewObject->SetName("Player");
-	pNewObject->SetPosition(0.0f, 0.0f); // �ϴ�, ���Ƿ� ���� 
-	pNewObject->SetSpeed(1.0f); // �ϴ�, ���Ƿ� ����   
+	pNewObject->SetPosition(0.0f, 0.0f);  
+	pNewObject->SetSpeed(1.0f);  
 
 	//====================bitmap
 	pNewObject->SetWidth(100); // 일단, 임의로 설정
 	pNewObject->SetHeight(100); // 일단, 임의로 설정
 	pNewObject->SetBitmapInfo(m_pPlayerBitmapInfo);
 	//====================
-	pNewObject->SetColliderCircle(50.0f); // �ϴ�, ���Ƿ� ����. ������Ʈ ������ �� �� �ϰ� ���� ����.
+	pNewObject->SetColliderCircle(50.0f); 
 	m_GameObjectPtrTable[0] = pNewObject;
 }
 
-// void MyFirstWndGame::CreateEnemy() // ��Ŭ�� -> ���� ��ġ ���ŵƴٸ�, ȣ��
-// {
-// 	float x = m_EnemySpawnPos.x;
-// 	float y = m_EnemySpawnPos.y;
-// 	float radius = 50.0f;
-// 	m_EnemySpawnPos = { 0, 0 };
-//
-// 	GameObject* pNewObject = new GameObject(ObjectType::ENEMY);
-// 	pNewObject->SetName("Enemy");
-// 	pNewObject->SetPosition(x, y);
-// 	pNewObject->SetSpeed(0.5f); // �ϴ�, ���Ƿ� ����   
-// 	pNewObject->SetColliderCircle(radius); // �ϴ�, ���Ƿ� ����. ������Ʈ ������ �� �� �ϰ� ���� ����.
-// 	
-// 	pNewObject->SetWidth(100);
-// 	pNewObject->SetHeight(100);
-// 	pNewObject->SetBitmapInfo(m_pEnemyBitmapInfo);
-// 	
-// 	bool flag = false;
-// 	for (int i = 0; i < MAX_GAME_OBJECT_COUNT; i++)
-// 	{
-// 		if (m_GameObjectPtrTable[i] != nullptr)
-// 		{
-// 			GameObject* other = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
-//
-// 			auto otherCircle = other->GetColiderCircle();
-//
-// 			Vector2f otherPos = otherCircle->center;
-// 			Vector2f myPos = { x, y };
-//
-// 			float dis = myPos.Distance(otherPos) - static_cast<float>(otherCircle->radius) - radius;
-//
-// 			if (dis < 0)
-// 			{
-// 				flag = true;
-// 				break;
-// 			}
-// 		}
-// 	}
-//
-// 	int i = 0;
-// 	while (++i < MAX_GAME_OBJECT_COUNT) //0��°�� ������ �÷��̾�!
-// 	{
-// 		if (nullptr == m_GameObjectPtrTable[i])
-// 		{
-// 			m_GameObjectPtrTable[i] = pNewObject;
-// 			break;
-// 		}
-// 	}
-//
-// 	if (i == MAX_GAME_OBJECT_COUNT || flag) // ���⼭ ����
-// 	{
-// 		// ���� ������Ʈ ���̺��� ���� á���ϴ�.
-// 		delete pNewObject;
-// 		pNewObject = nullptr;
-// 		m_GameObjectPtrTable[i] = nullptr;
-// 	}
-// }
+ void MyFirstWndGame::CreateEnemy() 
+ {
+ 	float x = m_EnemySpawnPos.x;
+ 	float y = m_EnemySpawnPos.y;
+ 	float radius = 50.0f;
+ 	m_EnemySpawnPos = { 0, 0 };
+
+ 	GameObject* pNewObject = new GameObject(ObjectType::ENEMY);
+ 	pNewObject->SetName("Enemy");
+ 	pNewObject->SetPosition(x, y);
+ 	pNewObject->SetSpeed(0.5f);   
+ 	pNewObject->SetColliderCircle(radius); 
+ 	
+ 	pNewObject->SetWidth(100);
+ 	pNewObject->SetHeight(100);
+ 	pNewObject->SetBitmapInfo(m_pEnemyBitmapInfo);
+ 	
+ 	bool flag = false;
+ 	for (int i = 0; i < MAX_GAME_OBJECT_COUNT; i++)
+ 	{
+ 		if (m_GameObjectPtrTable[i] != nullptr)
+ 		{
+ 			GameObject* other = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
+
+ 			auto otherCircle = other->GetColiderCircle();
+
+ 			Vector2f otherPos = otherCircle->center;
+ 			Vector2f myPos = { x, y };
+
+ 			float dis = myPos.Distance(otherPos) - static_cast<float>(otherCircle->radius) - radius;
+
+ 			if (dis < 0)
+ 			{
+ 				flag = true;
+ 				break;
+ 			}
+ 		}
+ 	}
+
+ 	int i = 0;
+ 	while (++i < MAX_GAME_OBJECT_COUNT) 
+ 	{
+ 		if (nullptr == m_GameObjectPtrTable[i])
+ 		{
+ 			m_GameObjectPtrTable[i] = pNewObject;
+ 			break;
+ 		}
+ 	}
+
+ 	if (i == MAX_GAME_OBJECT_COUNT || flag) 
+ 	{
+ 		
+ 		delete pNewObject;
+ 		pNewObject = nullptr;
+ 		m_GameObjectPtrTable[i] = nullptr;
+ 	}
+ }
 
 void MyFirstWndGame::UpdatePlayerInfo()
 {
@@ -272,99 +271,99 @@ void MyFirstWndGame::UpdatePlayerInfo()
 	Vector2f playerPos = pPlayer->GetPosition();
 
 	Vector2f playerDir = mousePos - playerPos;
-	float distance = playerDir.Length(); // �Ÿ� ���
+	float distance = playerDir.Length(); 
 
-	if (distance > 50.f) //���Ƿ� ������ �Ÿ�
+	if (distance > 50.f) 
 	{
-		playerDir.Normalize(); // ����ȭ
-		pPlayer->SetDirection(playerDir); // �÷��̾� ���� ����
+		playerDir.Normalize();
+		pPlayer->SetDirection(playerDir); 
 		pPlayer->SetSpeed(1.0f);
 	}
 	else
 	{
-		pPlayer->SetDirection(Vector2f(0, 0)); // �÷��̾� ����
+		pPlayer->SetDirection(Vector2f(0, 0)); 
 		pPlayer->SetSpeed(0);
 	}
 }
 
-// void MyFirstWndGame::UpdateEnemyInfo()
-// {
-// 	const auto player = GetPlayer();
-// 	ColliderCircle* playerCircle = player->GetColiderCircle();
-// 	if (player == nullptr)
-// 		return;
-// 	
-// 	// 플레이어가 움직였다면 enemy 전부 따라가게 한다.
-// 	// enemy는 플레이어 원을 넘지 않도록 한다.
-// 	for (int i = 1; i < MAX_GAME_OBJECT_COUNT; ++i)
-// 	{
-// 		if (m_GameObjectPtrTable[i] == nullptr)
-// 			continue;
-// 		
-// 		// Player와 Enemy의 충돌 원의 범위를 계산하여 겹치지 않도록 한다
-// 		GameObject* enemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
-// 		ColliderCircle* enemyCircle = enemy->GetColiderCircle();
-// 		
-// 		Vector2f playerPos = playerCircle->center;
-// 		Vector2f enemyPos = enemyCircle->center;
-//
-// 		float dist = playerPos.Distance(enemyPos) - static_cast<float>(playerCircle->radius) - static_cast<float>(enemyCircle->radius);
-//
-// 		Vector2f dir = playerPos - enemyPos;
-// 		dir.Normalize();
-// 		
-// 		if (dist <= 0)
-// 		{
-// 			enemy->SetDirection(-dir);
-// 			enemy->SetSpeed(1.5f);
-// 		}
-// 		else
-// 		{
-// 			enemy->SetDirection(dir);
-// 			enemy->SetSpeed(0.5f);
-// 		}
-// 		
-// 		if (player->GetSpeed() <= 0)
-// 		{
-// 			enemy->SetDirection(0);
-// 			enemy->SetSpeed(0);
-// 		}
-// 	}
-// 	
-// 	//enemy들끼리 겹치지않도록 한다.
-// 	for (int i = 1; i < MAX_GAME_OBJECT_COUNT; ++i)
-// 	{
-// 		if (m_GameObjectPtrTable[i] == nullptr)
-// 			continue;
-// 		
-// 		// Enemy들의 충돌 원의 범위를 계산하여 겹치지 않도록 한다
-// 		GameObject* enemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
-// 		ColliderCircle* enemyCircle = enemy->GetColiderCircle();
-//
-// 		for (int j = i; j < MAX_GAME_OBJECT_COUNT; ++j)
-// 		{
-// 			if (m_GameObjectPtrTable[j] == nullptr || enemy == m_GameObjectPtrTable[j])
-// 				continue;
-// 			
-// 			GameObject* otherEnemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[j]);
-// 			ColliderCircle* otherEnemyCircle = otherEnemy->GetColiderCircle();
-// 			
-// 			Vector2f enemyPos = enemyCircle->center;
-// 			Vector2f otherEnemyPos = otherEnemyCircle->center;
-// 	
-// 			float dist = otherEnemyPos.Distance(enemyPos) - static_cast<float>(otherEnemyCircle->radius) - static_cast<float>(enemyCircle->radius);
-// 	
-// 			Vector2f dir = otherEnemyPos - enemyPos;
-// 			dir.Normalize();
-// 			
-// 			if (dist <= 0)
-// 			{
-// 				enemy->SetDirection(-dir);
-// 				enemy->SetSpeed(1.5f);
-// 			}
-// 		}
-// 	}
-// }
+ void MyFirstWndGame::UpdateEnemyInfo()
+ {
+ 	const auto player = GetPlayer();
+ 	ColliderCircle* playerCircle = player->GetColiderCircle();
+ 	if (player == nullptr)
+ 		return;
+ 	
+ 	// 플레이어가 움직였다면 enemy 전부 따라가게 한다.
+ 	// enemy는 플레이어 원을 넘지 않도록 한다.
+ 	for (int i = 1; i < MAX_GAME_OBJECT_COUNT; ++i)
+ 	{
+ 		if (m_GameObjectPtrTable[i] == nullptr)
+ 			continue;
+ 		
+ 		// Player와 Enemy의 충돌 원의 범위를 계산하여 겹치지 않도록 한다
+ 		GameObject* enemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
+ 		ColliderCircle* enemyCircle = enemy->GetColiderCircle();
+ 		
+ 		Vector2f playerPos = playerCircle->center;
+ 		Vector2f enemyPos = enemyCircle->center;
+
+ 		float dist = playerPos.Distance(enemyPos) - static_cast<float>(playerCircle->radius) - static_cast<float>(enemyCircle->radius);
+
+ 		Vector2f dir = playerPos - enemyPos;
+ 		dir.Normalize();
+ 		
+ 		if (dist <= 0)
+ 		{
+ 			enemy->SetDirection(-dir);
+ 			enemy->SetSpeed(1.5f);
+ 		}
+ 		else
+ 		{
+ 			enemy->SetDirection(dir);
+ 			enemy->SetSpeed(0.5f);
+ 		}
+ 		
+ 		if (player->GetSpeed() <= 0)
+ 		{
+ 			enemy->SetDirection(0);
+ 			enemy->SetSpeed(0);
+ 		}
+ 	}
+ 	
+ 	//enemy들끼리 겹치지않도록 한다.
+ 	for (int i = 1; i < MAX_GAME_OBJECT_COUNT; ++i)
+ 	{
+ 		if (m_GameObjectPtrTable[i] == nullptr)
+ 			continue;
+ 		
+ 		// Enemy들의 충돌 원의 범위를 계산하여 겹치지 않도록 한다
+ 		GameObject* enemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[i]);
+ 		ColliderCircle* enemyCircle = enemy->GetColiderCircle();
+
+ 		for (int j = i; j < MAX_GAME_OBJECT_COUNT; ++j)
+ 		{
+ 			if (m_GameObjectPtrTable[j] == nullptr || enemy == m_GameObjectPtrTable[j])
+ 				continue;
+ 			
+ 			GameObject* otherEnemy = dynamic_cast<GameObject*>(m_GameObjectPtrTable[j]);
+ 			ColliderCircle* otherEnemyCircle = otherEnemy->GetColiderCircle();
+ 			
+ 			Vector2f enemyPos = enemyCircle->center;
+ 			Vector2f otherEnemyPos = otherEnemyCircle->center;
+ 	
+ 			float dist = otherEnemyPos.Distance(enemyPos) - static_cast<float>(otherEnemyCircle->radius) - static_cast<float>(enemyCircle->radius);
+ 	
+ 			Vector2f dir = otherEnemyPos - enemyPos;
+ 			dir.Normalize();
+ 			
+ 			if (dist <= 0)
+ 			{
+ 				enemy->SetDirection(-dir);
+ 				enemy->SetSpeed(1.5f);
+ 			}
+ 		}
+ 	}
+ }
 
 void MyFirstWndGame::Update()
 {
@@ -387,7 +386,6 @@ void MyFirstWndGame::Render()
 	//Clear the back buffer
 	::PatBlt(m_hBackDC, 0, 0, m_width, m_height, WHITENESS);
 
-	//�޸� DC�� �׸���
 	for (int i = 0; i < MAX_GAME_OBJECT_COUNT; ++i)
 	{
 		if (m_GameObjectPtrTable[i])

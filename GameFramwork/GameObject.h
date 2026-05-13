@@ -98,8 +98,8 @@ protected:
     ColliderBox* m_pColliderBox = nullptr;
 
 public:
-    //ColliderCircle* GetColiderCircle(){return m_pColliderCircle;}
-    //bool isColide = false;
+    ColliderCircle* GetColiderCircle(){return m_pColliderCircle;}
+    bool isColide = false;
     
     
 // ========================================================================= bitmap
