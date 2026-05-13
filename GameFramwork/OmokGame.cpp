@@ -140,28 +140,10 @@ void OmokGame::DrawBoard(HDC hdc)
 		MoveToEx(hdc, x, gridTop, nullptr);
 		LineTo(hdc, x, gridBottom);
 	}
-	// LineTo는 끝점 미포함이라 마지막 한 픽셀 보정
-	MoveToEx(hdc, gridRight, gridTop, nullptr);
-	LineTo(hdc, gridRight, gridBottom + 1);
-	MoveToEx(hdc, gridLeft, gridBottom, nullptr);
-	LineTo(hdc, gridRight + 1, gridBottom);
-
-	// 화점(별점) - 15x15 표준 5개 위치: (3,3), (3,11), (7,7), (11,3), (11,11)
-	HBRUSH hDotBrush = CreateSolidBrush(RGB(0, 0, 0));
-	SelectObject(hdc, hDotBrush);
-	const int dotIndices[5][2] = { {3,3}, {3,11}, {7,7}, {11,3}, {11,11} };
-	const int dotRadius = 4;
-	for (int i = 0; i < 5; ++i)
-	{
-		const int cx = gridLeft + dotIndices[i][0] * BOARD_CELL_SIZE;
-		const int cy = gridTop + dotIndices[i][1] * BOARD_CELL_SIZE;
-		Ellipse(hdc, cx - dotRadius, cy - dotRadius, cx + dotRadius + 1, cy + dotRadius + 1);
-	}
 
 	SelectObject(hdc, hOldBrush);
 	DeleteObject(hBoardBrush);
 	DeleteObject(hLinePen);
-	DeleteObject(hDotBrush);
 }
 
 void OmokGame::OnResize(int width, int height)
