@@ -46,15 +46,15 @@ void OmokGame::Run()
 		{
 			if (msg.message == WM_LBUTTONDOWN)
 			{
-				OmokGame::OnLButtonDown(LOWORD(msg.lParam), HIWORD(msg.lParam));
+				OnLButtonDown(LOWORD(msg.lParam), HIWORD(msg.lParam));
 			}
 			else if (msg.message == WM_RBUTTONDOWN)
 			{
-				OmokGame::OnRButtonDown(LOWORD(msg.lParam), HIWORD(msg.lParam));
+				OnRButtonDown(LOWORD(msg.lParam), HIWORD(msg.lParam));
 			}
 			else if (msg.message == WM_MOUSEMOVE)
 			{
-				OmokGame::OnMouseMove(LOWORD(msg.lParam), HIWORD(msg.lParam));
+				OnMouseMove(LOWORD(msg.lParam), HIWORD(msg.lParam));
 			}
 			else
 			{
@@ -115,9 +115,9 @@ void OmokGame::DrawBoard(HDC hdc)
 
 	// 판 배경(나무색)
 	HBRUSH hBoardBrush = CreateSolidBrush(RGB(220, 179, 92));
-	HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBoardBrush);
-	HPEN hNoPen = (HPEN)GetStockObject(NULL_PEN);
-	HPEN hOldPen = (HPEN)SelectObject(hdc, hNoPen);
+	HBRUSH hOldBrush = static_cast<HBRUSH>(SelectObject(hdc, hBoardBrush));
+	HPEN hNoPen = static_cast<HPEN>(GetStockObject(NULL_PEN));
+	HPEN hOldPen = static_cast<HPEN>(SelectObject(hdc, hNoPen));
 	Rectangle(hdc, boardLeft, boardTop, boardRight + 1, boardBottom + 1);
 	SelectObject(hdc, hOldPen);
 
@@ -155,44 +155,69 @@ void OmokGame::DrawBoard(HDC hdc)
 				{
 					Ellipse(hdc, currX - 10, currY - 10, currX + 10, currY + 10);
 
+					// 격자 안에서만 좌클릭 이벤트 받는다
 					if (m_MousePos.x >= gridLeft && m_MousePos.x <= gridRight)
 						if (m_MousePos.y >= gridTop && m_MousePos.y <= gridBottom)
 						{
-							if (isClicked)
+							if (isLClicked)
 							{
-								isClicked = false;
-								// 인덱스 판단하기 
-								Board[i][j] = 1;
+								isLClicked = false;
+								
+								if (Board[i][j])
+									continue;
+									
+								if (currTurn == Turn::BLACK)
+									currTurn = Turn::WHITE;
+								else
+									currTurn = Turn::BLACK;
+								
+								Board[i][j] = static_cast<int>(currTurn);
 							}
 						}
-
-
-
 				}
 
 		}
 	}
 
+
+	DrawGOStone(hdc, gridTop, gridLeft);
+
+	SelectObject(hdc, hOldBrush);
+	DeleteObject(hBoardBrush);
+	DeleteObject(hLinePen);
+}
+
+void OmokGame::DrawGOStone(HDC hdc, int top, int left)
+{
+	// 바둑돌 브러시 생성
+	HBRUSH hBlackBrush = CreateSolidBrush(RGB(0, 0, 0));
+	HBRUSH hWhiteBrush = CreateSolidBrush(RGB(255, 255, 255));
+	HBRUSH hOldStoneBrush = static_cast<HBRUSH>(SelectObject(hdc, hBlackBrush));
+
 	for (int i = 0; i < BOARD_LINE_COUNT; i++)
 	{
-		int currY = gridTop + i * BOARD_CELL_SIZE;
+		int currY = top + i * BOARD_CELL_SIZE;
 
 		for (int j = 0; j < BOARD_LINE_COUNT; j++)
 		{
-			int currX = gridLeft + j * BOARD_CELL_SIZE;
+			int currX = left + j * BOARD_CELL_SIZE;
 
 			if (!Board[i][j])
 				continue;
+
+			if (Board[i][j] == static_cast<int>(Turn::BLACK))
+				SelectObject(hdc, hBlackBrush);
+			else if (Board[i][j] == static_cast<int>(Turn::WHITE))
+				SelectObject(hdc, hWhiteBrush);
 
 			Ellipse(hdc, currX - 10, currY - 10, currX + 10, currY + 10);
 		}
 	}
 
-	//Rectangle(hdc, m_MousePos.x - 10, m_MousePos.y - 10, m_MousePos.x + 10, m_MousePos.y + 10);
-
-	SelectObject(hdc, hOldBrush);
-	DeleteObject(hBoardBrush);
-	DeleteObject(hLinePen);
+	// 원래 브러시 복원 후 생성한 브러시 모두 삭제
+	SelectObject(hdc, hOldStoneBrush);
+	DeleteObject(hBlackBrush);
+	DeleteObject(hWhiteBrush);
 }
 
 void OmokGame::OnResize(int width, int height)
@@ -235,15 +260,15 @@ void OmokGame::OnLButtonDown(int x, int y)
 {
 	const int boardLeft = m_BoardOffsetX;
 	const int boardTop = m_BoardOffsetY;
-	
+
 	const int gridLeft = boardLeft + BOARD_PADDING;
 	const int gridTop = boardTop + BOARD_PADDING;
 	const int gridRight = gridLeft + BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1);
 	const int gridBottom = gridTop + BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1);
 
-	if (m_MousePos.x >= gridLeft && m_MousePos.x <= gridRight )
-		if (m_MousePos.y >= gridTop && m_MousePos.y <= gridBottom )
-			isClicked = true;
+	if (m_MousePos.x >= gridLeft && m_MousePos.x <= gridRight)
+		if (m_MousePos.y >= gridTop && m_MousePos.y <= gridBottom)
+			isLClicked = true;
 }
 
 void OmokGame::OnRButtonDown(int x, int y)

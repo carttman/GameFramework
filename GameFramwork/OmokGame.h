@@ -18,6 +18,7 @@ private:
     void Render();
 
     void DrawBoard(HDC hdc);
+    void DrawGOStone(HDC hdc, int top, int left);
 
     void OnResize(int width, int height) override;
     void OnClose() override;
@@ -64,6 +65,14 @@ private:
 
     int Board[BOARD_CELL_SIZE][BOARD_CELL_SIZE] = {};
 
-    bool isClicked = false;
+    bool isLClicked = false;
+
+    enum class Turn
+    {
+	    BLACK = 1,
+        WHITE = 2
+    };
+
+    Turn currTurn = Turn::BLACK;
 };
 
