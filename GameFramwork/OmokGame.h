@@ -74,5 +74,7 @@ private:
     };
 
     Turn currTurn = Turn::BLACK;
+    
+    void CheckGameOver();
 };
 

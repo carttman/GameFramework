@@ -172,6 +172,7 @@ void OmokGame::DrawBoard(HDC hdc)
 									currTurn = Turn::BLACK;
 								
 								Board[i][j] = static_cast<int>(currTurn);
+								CheckGameOver();
 							}
 						}
 				}
@@ -266,6 +267,7 @@ void OmokGame::OnLButtonDown(int x, int y)
 	const int gridRight = gridLeft + BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1);
 	const int gridBottom = gridTop + BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1);
 
+	// 격자에 돌이 배치되지 않아도 클릭처리하는 버그 있음
 	if (m_MousePos.x >= gridLeft && m_MousePos.x <= gridRight)
 		if (m_MousePos.y >= gridTop && m_MousePos.y <= gridBottom)
 			isLClicked = true;
@@ -283,5 +285,119 @@ void OmokGame::FixedUpdate()
 void OmokGame::LogicUpdate()
 {
 
+}
+
+void OmokGame::CheckGameOver()
+{
+	int blackCount = 0;
+	int whiteCount = 0;
+	
+	for (int i=0; i<BOARD_LINE_COUNT; i++)
+	{
+		for (int j=0; j<BOARD_LINE_COUNT; j++)
+		{
+			// 가로 ==================================
+			for (int k=0; k<5; k++)
+			{
+				if (Board[i][j + k] == static_cast<int>(Turn::BLACK))
+					blackCount++;
+				else if (Board[i][j + k] == static_cast<int>(Turn::WHITE))
+					whiteCount++;
+			}
+			
+			if (blackCount == 5)
+			{
+				std::cout << "BLACK WIN" << std::endl;
+				return;
+			}
+			
+			if (whiteCount == 5)
+			{
+				std::cout << "WHITE WIN" << std::endl;
+				return;
+			}
+			
+			blackCount = 0;
+			whiteCount = 0;
+			// 가로 ==================================
+			
+			// 아래 대각 ===================================
+			for (int k=0; k<5; k++)
+			{
+				if (Board[i+k][j+k] == static_cast<int>(Turn::BLACK))
+					blackCount++;
+				else if (Board[i+k][j+k] == static_cast<int>(Turn::WHITE))
+					whiteCount++;
+			}
+			
+			if (blackCount == 5)
+			{
+				std::cout << "BLACK WIN" << std::endl;
+				return;
+			}
+			
+			if (whiteCount == 5)
+			{
+				std::cout << "WHITE WIN" << std::endl;
+				return;
+			}
+			
+			blackCount = 0;
+			whiteCount = 0;
+			// 아래 대각 ===================================
+
+			// 아래 ========================================
+			for (int k=0; k<5; k++)
+			{
+				if (Board[i+k][j] == static_cast<int>(Turn::BLACK))
+					blackCount++;
+				else if (Board[i+k][j] == static_cast<int>(Turn::WHITE))
+					whiteCount++;
+			}
+			
+			if (blackCount == 5)
+			{
+				std::cout << "BLACK WIN" << std::endl;
+				return;
+			}
+			
+			if (whiteCount == 5)
+			{
+				std::cout << "WHITE WIN" << std::endl;
+				return;
+			}
+			
+			blackCount = 0;
+			whiteCount = 0;
+			
+			// 아래 ========================================
+
+			// 윗 대각 =========================================
+			for (int k=0; k<5; k++)
+			{
+				if (Board[i-k][j+k] == static_cast<int>(Turn::BLACK))
+					blackCount++;
+				else if (Board[i-k][j+k] == static_cast<int>(Turn::WHITE))
+					whiteCount++;
+			}
+			
+			if (blackCount == 5)
+			{
+				std::cout << "BLACK WIN" << std::endl;
+				return;
+			}
+			
+			if (whiteCount == 5)
+			{
+				std::cout << "WHITE WIN" << std::endl;
+				return;
+			}
+			
+			blackCount = 0;
+			whiteCount = 0;
+			// 윗 대각 =========================================
+		}
+	}
+	
 }
 
