@@ -29,6 +29,7 @@ private:
     void FixedUpdate();
     void LogicUpdate();
 
+
 private:
     HDC m_hFrontDC = nullptr;
     HDC m_hBackDC = nullptr;
@@ -60,5 +61,9 @@ private:
 
     int m_BoardOffsetX = 0;
     int m_BoardOffsetY = 0;
+
+    int Board[BOARD_CELL_SIZE][BOARD_CELL_SIZE] = {};
+
+    bool isClicked = false;
 };
 

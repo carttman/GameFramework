@@ -141,6 +141,55 @@ void OmokGame::DrawBoard(HDC hdc)
 		LineTo(hdc, x, gridBottom);
 	}
 
+	// 마우스 위치로 해당 격자의 위치 판별
+	for (int i = 0; i < BOARD_LINE_COUNT; i++)
+	{
+		int currY = gridTop + i * BOARD_CELL_SIZE;
+
+		for (int j = 0; j < BOARD_LINE_COUNT; j++)
+		{
+			int currX = gridLeft + j * BOARD_CELL_SIZE;
+
+			if (m_MousePos.x >= currX - 10 && m_MousePos.x <= currX + 10)
+				if (m_MousePos.y >= currY - 10 && m_MousePos.y <= currY + 10)
+				{
+					Ellipse(hdc, currX - 10, currY - 10, currX + 10, currY + 10);
+
+					if (m_MousePos.x >= gridLeft && m_MousePos.x <= gridRight)
+						if (m_MousePos.y >= gridTop && m_MousePos.y <= gridBottom)
+						{
+							if (isClicked)
+							{
+								isClicked = false;
+								// 인덱스 판단하기 
+								Board[i][j] = 1;
+							}
+						}
+
+
+
+				}
+
+		}
+	}
+
+	for (int i = 0; i < BOARD_LINE_COUNT; i++)
+	{
+		int currY = gridTop + i * BOARD_CELL_SIZE;
+
+		for (int j = 0; j < BOARD_LINE_COUNT; j++)
+		{
+			int currX = gridLeft + j * BOARD_CELL_SIZE;
+
+			if (!Board[i][j])
+				continue;
+
+			Ellipse(hdc, currX - 10, currY - 10, currX + 10, currY + 10);
+		}
+	}
+
+	//Rectangle(hdc, m_MousePos.x - 10, m_MousePos.y - 10, m_MousePos.x + 10, m_MousePos.y + 10);
+
 	SelectObject(hdc, hOldBrush);
 	DeleteObject(hBoardBrush);
 	DeleteObject(hLinePen);
@@ -184,7 +233,17 @@ void OmokGame::OnMouseMove(int x, int y)
 
 void OmokGame::OnLButtonDown(int x, int y)
 {
+	const int boardLeft = m_BoardOffsetX;
+	const int boardTop = m_BoardOffsetY;
 	
+	const int gridLeft = boardLeft + BOARD_PADDING;
+	const int gridTop = boardTop + BOARD_PADDING;
+	const int gridRight = gridLeft + BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1);
+	const int gridBottom = gridTop + BOARD_CELL_SIZE * (BOARD_LINE_COUNT - 1);
+
+	if (m_MousePos.x >= gridLeft && m_MousePos.x <= gridRight )
+		if (m_MousePos.y >= gridTop && m_MousePos.y <= gridBottom )
+			isClicked = true;
 }
 
 void OmokGame::OnRButtonDown(int x, int y)
@@ -198,4 +257,6 @@ void OmokGame::FixedUpdate()
 
 void OmokGame::LogicUpdate()
 {
+
 }
+
