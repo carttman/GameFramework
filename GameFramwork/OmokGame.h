@@ -18,14 +18,14 @@ private:
     void Render();
 
     void DrawBoard(HDC hdc);
-    void DrawGOStone(HDC hdc, int top, int left);
+    void DrawGOStone(HDC hdc, int top, int left) const;
 
     void OnResize(int width, int height) override;
     void OnClose() override;
 
     void OnMouseMove(int x, int y);
-    void OnLButtonDown(int x, int y);
-    void OnRButtonDown(int x, int y);
+    void OnLButtonDown();
+    void OnRButtonDown();
 
     void FixedUpdate();
     void LogicUpdate();
@@ -65,16 +65,22 @@ private:
 
     int Board[BOARD_CELL_SIZE][BOARD_CELL_SIZE] = {};
 
-    bool isLClicked = false;
+    bool m_IsLClicked = false;
 
     enum class Turn
     {
 	    BLACK = 1,
-        WHITE = 2
+        WHITE = 2,
+        NONE = 3,
     };
 
-    Turn currTurn = Turn::BLACK;
+    Turn m_CurrTurn = Turn::BLACK;
+    Turn m_Winner = Turn::NONE;
     
     void CheckGameOver();
+    void TurnText(HDC hdc) const;
+
+    void HelpText(HDC hdc) const;
+    void InitBoard();
 };
 
