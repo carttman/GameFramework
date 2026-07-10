@@ -132,6 +132,10 @@
     <ClCompile Include="NzWndBase.cpp" />
     <ClCompile Include="OmokGame.cpp" />
     <ClCompile Include="RenderHelp.cpp" />
+    <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="TestScene.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Utillity.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +147,10 @@
     <ClInclude Include="NzWndBase.h" />
     <ClInclude Include="OmokGame.h" />
     <ClInclude Include="RenderHelp.h" />
+    <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="TestScene.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Utillity.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
